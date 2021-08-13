@@ -4,6 +4,10 @@ require("dotenv").config()
 
 //! Imports
 const dbConnection = require("./db")
+const controllers = require("./controllers")
+
+app.use(Express.json())
+app.use("/user", controllers.userController)
 
 dbConnection.authenticate()
     .then(() => dbConnection.sync())
@@ -13,4 +17,4 @@ dbConnection.authenticate()
         })
     })
 
-app.use(Express.json())
+

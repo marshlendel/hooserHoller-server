@@ -18,7 +18,7 @@ const Room = dbConnection.define("room", {
     },
 
     addedUsers: {
-        type: DataTypes.ARRAY,
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: true
     },
 

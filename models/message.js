@@ -8,7 +8,7 @@ const Message = dbConnection.define("message", {
     },
 
     likes: {
-        type: DataTypes.ARRAY,
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
         allowNull: true
     },
 
