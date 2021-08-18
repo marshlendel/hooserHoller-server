@@ -12,6 +12,7 @@ app.use(middleware.CORS)
 app.use("/user", controllers.userController)
 app.use(middleware.validateSession)
 app.use("/room", controllers.roomController)
+app.use("/message", controllers.messageController)
 
 
 dbConnection.authenticate()
