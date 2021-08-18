@@ -1,22 +1,26 @@
 const router = require("express").Router();
 const { UniqueConstraintError } = require("sequelize");
-const { userModel } = require("../models");
+const { UserModel } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { CheckAdmin } = require("../middleware");
+const checkAdmin = require("../middleware/checkAdmin");
+const {validateSession} = require("../middleware")
 
 //! Register
 
 router.post("/register", async (req, res) => {
-  let { firstName, lastName, email, password, isAdmin } = req.body;
+  let { firstName, lastName, email, password, isAdmin, isBanned } = req.body;
   let template = {
     firstName,
     lastName,
     email,
     password: bcrypt.hashSync(password, 12),
     isAdmin,
+    isBanned,
   };
   try {
-    let NewUser = await userModel.create(template);
+    let NewUser = await UserModel.create(template);
     let token = jwt.sign({ id: NewUser.id }, process.env.JWT_SECRET, {
       expiresIn: 60 * 60 * 24,
     });
@@ -52,7 +56,7 @@ router.post("/login", async (req, res) => {
   };
 
   try {
-    let loginUser = await userModel.findOne(query);
+    let loginUser = await UserModel.findOne(query);
     if (loginUser) {
       let passwordComparison = await bcrypt.compare(
         password,
@@ -81,6 +85,40 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Failed to log user in",
+    });
+  }
+});
+
+//! Ban user
+router.put("/ban/:userId",validateSession, checkAdmin, async (req, res) => {
+  const {userId} = req.params;
+  const {id} = req.user
+  const { isBanned } = req.body;
+
+  const template = {
+    isBanned,
+  };
+
+  const query = {
+    where: {
+      id: userId
+    }
+  };
+
+  try {
+    if (id == userId) {
+      res.status(406).json({
+        message: "You can't ban yourself",
+      });
+    } else {
+      bannedUser = await UserModel.update(template, query);
+      res.status(200).json({
+        message: `User is now banned`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      error: err,
     });
   }
 });

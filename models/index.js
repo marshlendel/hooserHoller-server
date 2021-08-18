@@ -1,5 +1,5 @@
 module.exports = {
-    userModel: require("./user"),
-    roomModel: require("./room"),
-    messageModel: require("./message"),
+    UserModel: require("./user"),
+    RoomModel: require("./room"),
+    MessageModel: require("./message"),
 }

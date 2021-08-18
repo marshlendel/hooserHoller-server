@@ -27,6 +27,11 @@ const User = dbConnection.define("user", {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         unique: true
+    },
+
+    isBanned: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
     }
 })
 

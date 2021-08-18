@@ -1,10 +1,12 @@
 const { DataTypes } = require("sequelize")
 const dbConnection = require("../db")
 
+
 const Room = dbConnection.define("room", {
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
 
     description: {
