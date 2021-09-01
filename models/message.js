@@ -2,8 +2,23 @@ const { DataTypes } = require("sequelize")
 const dbConnection = require("../db")
 
 const Message = dbConnection.define("message", {
+    pic: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    
     content: {
         type: DataTypes.STRING,
+        allowNull: false
+    },
+
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+
+    roomId: {
+        type:DataTypes.INTEGER,
         allowNull: false
     },
 
@@ -12,7 +27,12 @@ const Message = dbConnection.define("message", {
         allowNull: true
     },
 
-    room: {
+    date: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+
+    time: {
         type: DataTypes.STRING,
         allowNull: false
     },

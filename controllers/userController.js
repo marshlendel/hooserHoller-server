@@ -10,8 +10,9 @@ const {validateSession} = require("../middleware")
 //! Register
 
 router.post("/register", async (req, res) => {
-  let { firstName, lastName, email, password, isAdmin, isBanned } = req.body;
+  let { pic, firstName, lastName, email, password, isAdmin, isBanned } = req.body;
   let template = {
+    pic,
     firstName,
     lastName,
     email,
@@ -27,6 +28,7 @@ router.post("/register", async (req, res) => {
     res.status(201).json({
       message: "user successfully registered",
       token,
+      userInfo: NewUser
     });
   } catch (err) {
     if (err instanceof UniqueConstraintError && isAdmin == false) {
@@ -69,7 +71,8 @@ router.post("/login", async (req, res) => {
         });
 
         res.status(200).json({
-          message: `${loginUser.firstName} successfully logged in!`,
+          message: `user successfully logged in!`,
+          userInfo: loginUser,
           token,
         });
       } else {

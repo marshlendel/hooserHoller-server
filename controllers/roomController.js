@@ -36,7 +36,11 @@ router.post("/create", Banned, async (req, res) => {
 //! Display Rooms
 
 router.get("/", async (req, res) => {
-  const rooms = await RoomModel.findAll();
+  const rooms = await RoomModel.findAll({
+    order: [
+      ["id", "ASC"]
+    ]
+});
   try {
     res.status(200).json({
       rooms: rooms,
@@ -66,6 +70,7 @@ router.put("/edit/:id", Banned, async (req, res) => {
     let updatedRoom = await RoomModel.update(template, query);
     res.status(200).json({
       updatedRoom,
+      message: updatedRoom ? "Room updated" : "You can't edit someone else's room"
     });
   } catch (err) {
     res.status(500).json({
@@ -84,7 +89,8 @@ router.delete("/delete/:id", Banned, async (req, res) => {
     try{
         const deletedRoom = await RoomModel.destroy(query)
         res.status(200).json({
-            deletedRoom: deletedRoom
+            deletedRoom: deletedRoom,
+            message: deletedRoom ? "Room Deleted" : "Can't delete someone else's room"
         })
     }catch(err) {
         res.status(500).json({

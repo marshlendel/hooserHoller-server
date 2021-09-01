@@ -5,13 +5,17 @@ const {Banned} = require("../middleware")
 //! Create Message
 
 router.post("/create", Banned, async (req, res) => {
-  const { content, likes, room } = req.body;
+  const {pic, content, name, roomId, likes, date, time } = req.body;
   const { id } = req.user;
   try {
     const newMessage = await MessageModel.create({
+      pic,
       content,
+      name,
+      roomId,
       likes,
-      room,
+      date,
+      time,
       owner: id
     });
     res.status(200).json({
@@ -27,12 +31,15 @@ router.post("/create", Banned, async (req, res) => {
 
 //! Display Messages by room
 
-router.get("/:room", async (req, res) => {
-    const {room} = req.params
+router.get("/:roomId", async (req, res) => {
+    const {roomId} = req.params
   const messages = await MessageModel.findAll({
       where: {
-        room
-      }
+        roomId: roomId
+      },
+      order: [
+        ["id", "ASC"]
+      ]
   });
   try {
     res.status(200).json({
@@ -49,13 +56,11 @@ router.get("/:room", async (req, res) => {
 
 router.put("/edit/:id", Banned, async (req, res) => {
   const { id } = req.params;
-  const ownerId = req.user.id;
-  const { content, likes } = req.body;
+  const {likes } = req.body;
 
-  let query = { where: { id, owner: ownerId } };
+  let query = { where: { id} };
 
   let template = {
-    content,
     likes
   };
 
@@ -81,7 +86,8 @@ router.delete("/delete/:id", Banned, async (req, res) => {
     try{
         const deletedMessage = await MessageModel.destroy(query)
         res.status(200).json({
-            deletedMessage: deletedMessage
+            theDeletedMessage: deletedMessage,
+            message: deletedMessage ? "Message deleted" : "You can only delete your own messages"
         })
     }catch(err) {
         res.status(500).json({

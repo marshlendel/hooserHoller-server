@@ -2,6 +2,11 @@ const { DataTypes } = require("sequelize")
 const dbConnection = require("../db")
 
 const User = dbConnection.define("user", {
+    pic: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    
     firstName: {
         type: DataTypes.STRING,
         allowNull: false
@@ -25,7 +30,7 @@ const User = dbConnection.define("user", {
 
     isAdmin: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
         unique: true
     },
 
